@@ -3,3 +3,10 @@ kind: Kustomization
 
 resources:
 - argocd.yaml
+- cert-manager.yaml
+- envoy-gateway.yaml
+- external-secrets.yaml
+- gateways.yaml
+- headlamp.yaml
+- kube-prometheus.yaml
+- loki.yaml

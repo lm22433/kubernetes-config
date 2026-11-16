@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: argocd
+  name: media
   namespace: argocd
   finalizers:
-  - resources-finalizers.argocd.argoproj.io
+  - resources-finalizer.argocd.argoproj.io
 spec:
-  description: ArgoCD
+  description: idk yet
   sourceRepos:
   - https://github.com/lm22433/kubernetes-config.git
   destinations:
-  - namespace: '*'
+  - namespace: "servarr"
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: '*'

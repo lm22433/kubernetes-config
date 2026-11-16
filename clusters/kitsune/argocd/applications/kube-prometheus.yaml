@@ -1,0 +1,130 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus
+  namespace: argocd
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-operator
+  namespace: argocd
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/prometheus-operator
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/prometheus
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alertmanager
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/alertmanager
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/grafana
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-state-metrics
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/kube-state-metrics
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-exporter
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/node-exporter
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-control-plane
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: kube-prometheus
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/kube-prometheus/kubernetes-control-plane
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-prometheus

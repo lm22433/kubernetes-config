@@ -13,11 +13,11 @@ resources:
 - ingress.yaml
 
 patches:
-- target:
+- patch: |
+    apiVersion: v1
     kind: ConfigMap
-    name: argocd-cmd-params-cm
-  patch: |-
-    - op: add
-      path: /data
-      value:
-        server.insecure: "true"
+    metadata:
+      name: argocd-cmd-params-cm
+    data:
+      # Disable TLS on ArgoCD as envoy-gateway handles this.
+      server.insecure: "true"

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kube-prometheus
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  description: idk yet
+  sourceRepos:
+  - https://github.com/lm22433/kubernetes-config.git
+  destinations:
+  - namespace: "kube-prometheus"
+    server: https://kubernetes.default.svc
+  - namespace: "kube-system"
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  orphanedResources:
+    warn: false

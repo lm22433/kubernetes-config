@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gateways
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/gateways
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: envoy-gateway

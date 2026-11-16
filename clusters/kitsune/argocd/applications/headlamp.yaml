@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: headlamp
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: clusters/kitsune/headlamp
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: headlamp
