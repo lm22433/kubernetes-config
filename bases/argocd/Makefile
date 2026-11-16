@@ -13,4 +13,4 @@ crds:
 
 namespace-install:
 	echo "# This is an auto-generated file. Do not edit manually." > namespace-install/namespace-install.yaml
-	kustomize build "https://github.com/argoproj/argo-cd//manifests/namespace-install?ref=v$(version)" >> namespace-install/namespace-install.yaml
+	kustomize build "https://github.com/argoproj/argo-cd//manifests/ha/namespace-install?ref=v$(version)" >> namespace-install/namespace-install.yaml
