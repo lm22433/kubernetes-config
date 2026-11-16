@@ -32,20 +32,29 @@ patches:
   patch: |-
     - op: remove
       path: /spec/template/spec/affinity
+    - op: replace
+      path: /spec/replicas
+      value: 1
 - target:
     kind: Deployment
     name: argocd-repo-server
   patch: |-
     - op: remove
       path: /spec/template/spec/affinity
+    - op: replace
+      path: /spec/replicas
+      value: 1
 - target:
     kind: Deployment
     name: argocd-server
   patch: |-
     - op: remove
       path: /spec/template/spec/affinity
+    - op: replace
+      path: /spec/replicas
+      value: 1
 - target:
-    kind: Deployment
+    kind: StatefulSet
     name: argocd-redis-ha-server
   patch: |-
     - op: remove
