@@ -1,0 +1,26 @@
+serviceMonitor:
+  enabled: true
+  renderMode: alwaysRender
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 60Mi
+  limits:
+    memory: 120Mi
+
+certController:
+  resources:
+    requests:
+      cpu: 5m
+      memory: 60Mi
+    limits:
+      memory: 120Mi
+
+webhook:
+  resources:
+    requests:
+      cpu: 5m
+      memory: 35Mi
+    limits:
+      memory: 75Mi

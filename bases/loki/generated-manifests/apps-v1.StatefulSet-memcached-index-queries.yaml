@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: memcached-index-queries
+  namespace: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: memcached-index-queries
+  serviceName: memcached-index-queries
+  template:
+    metadata:
+      labels:
+        name: memcached-index-queries
+    spec:
+      containers:
+      - args:
+        - -m 128
+        - -I 5m
+        - -c 1024
+        - -v
+        image: memcached:1.5.17-alpine
+        imagePullPolicy: IfNotPresent
+        name: memcached
+        ports:
+        - containerPort: 11211
+          name: client
+        resources:
+          limits:
+            memory: 254Mi
+          requests:
+            cpu: 25m
+            memory: 254Mi
+      - args:
+        - --memcached.address=localhost:11211
+        - --web.listen-address=0.0.0.0:9150
+        image: prom/memcached-exporter:v0.11.3
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        ports:
+        - containerPort: 9150
+          name: http-metrics
+  updateStrategy:
+    type: RollingUpdate

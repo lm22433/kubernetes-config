@@ -1,0 +1,68 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+  finalizers:
+  - resources-finalizers.argocd.argoproj.io
+spec:
+  description: Default Project
+  sourceRepos: []
+  destinations: []
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist: []
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: admin
+  namespace: argocd
+  finalizers:
+  - resources-finalizers.argocd.argoproj.io
+spec:
+  sourceRepos:
+  - https://github.com/lm22433/kubernetes-config.git
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: 'argoproj.io'
+    kind: Application
+  - group: 'argoproj.io'
+    kind: AppProject
+  - group: 'argoproj.io'
+    kind: ApplicationSet
+  orphanedResources:
+    warn: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: applications
+  namespace: argocd
+spec:
+  project: admin
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: path/to/applications
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: projects
+  namespace: argocd
+spec:
+  project: admin
+  source:
+    repoURL: https://github.com/lm22433/kubernetes-config.git
+    path: path/to/projects
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd

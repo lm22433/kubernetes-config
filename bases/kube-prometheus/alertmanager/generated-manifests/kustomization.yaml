@@ -1,0 +1,12 @@
+# Generated from Makefile
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- alertmanager.yaml
+- networkPolicy.yaml
+- podDisruptionBudget.yaml
+- prometheusRule.yaml
+- secret.yaml
+- service.yaml
+- serviceAccount.yaml
+- serviceMonitor.yaml

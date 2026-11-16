@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    name: distributor-pdb
+  name: distributor-pdb
+  namespace: loki
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      name: distributor

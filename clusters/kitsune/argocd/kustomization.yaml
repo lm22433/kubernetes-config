@@ -1,0 +1,97 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../bases/argocd
+
+patches:
+- target:
+    kind: Application
+    name: applications
+  patch: |-
+    - op: add
+      path: /spec/source/path
+      value: clusters/kitsune/argocd/applications
+- target:
+    kind: Application
+    name: projects
+  patch: |-
+    - op: add
+      path: /spec/source/path
+      value: clusters/kitsune/argocd/projects
+
+- target:
+    kind: Deployment
+    name: argocd-dex-server
+  patch: |-
+    - op: remove
+      path: /spec/template/spec/affinity
+- target:
+    kind: Deployment
+    name: argocd-redis-ha-haproxy
+  patch: |-
+    - op: remove
+      path: /spec/template/spec/affinity
+- target:
+    kind: Deployment
+    name: argocd-repo-server
+  patch: |-
+    - op: remove
+      path: /spec/template/spec/affinity
+- target:
+    kind: Deployment
+    name: argocd-server
+  patch: |-
+    - op: remove
+      path: /spec/template/spec/affinity
+- target:
+    kind: Deployment
+    name: argocd-redis-ha-server
+  patch: |-
+    - op: remove
+      path: /spec/template/spec/affinity
+
+- target:
+    kind: ListenerSet
+    name: argocd
+  patch: |-
+    - op: replace
+      path: /spec/listeners/0/hostname
+      value: argocd.localhost
+    - op: replace
+      path: /spec/listeners/1/hostname
+      value: grpc.argocd.localhost
+- target:
+    kind: HTTPRoute
+    name: argocd-server
+  patch: |-
+    - op: replace
+      path: /spec/hostnames/0
+      value: argocd.localhost
+- target:
+    kind: GRPCRoute
+    name: argocd-server-grpc
+  patch: |-
+    - op: replace
+      path: /spec/hostnames/0
+      value: grpc.argocd.localhost
+- target:
+    kind: Certificate
+    name: argocd-tls
+  patch: |-
+    - op: replace
+      path: /spec/dnsNames
+      value:
+      - argocd.localhost
+      - grpc.argocd.localhost
+    - op: replace
+      path: /spec/issuerRef/name
+      value: selfsigned
+
+- target:
+    kind: ConfigMap
+    name: argocd-cm
+  patch: |-
+    - op: replace
+      path: /data/admin.enabled
+      value: "true"

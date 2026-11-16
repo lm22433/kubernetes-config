@@ -1,0 +1,33 @@
+{
+    "version": 1,
+    "dependencies": [
+        {
+            "source": {
+                "git": {
+                    "remote": "https://github.com/grafana/jsonnet-libs.git",
+                    "subdir": "ksonnet-util"
+                }
+            },
+            "version": "master"
+        },
+        {
+            "source": {
+                "git": {
+                    "remote": "https://github.com/grafana/loki.git",
+                    "subdir": "production/ksonnet/loki"
+                }
+            },
+            "version": "release-3.7.x"
+        },
+        {
+            "source": {
+                "git": {
+                    "remote": "https://github.com/jsonnet-libs/k8s-libsonnet.git",
+                    "subdir": "1.37"
+                }
+            },
+            "version": "main"
+        }
+    ],
+    "legacyImports": true
+}

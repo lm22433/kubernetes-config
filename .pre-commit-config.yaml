@@ -1,0 +1,33 @@
+exclude: |
+  (?x)^(
+    .*/generated-manifests/.*|
+    bases/envoy-gateway/setup/.*|
+    bases/argocd/crds/crds\.yaml|
+    bases/argocd/cluster-rbac/cluster-rbac\.yaml|
+    bases/argocd/namespace-install/namespace-install\.yaml
+  )$
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: check-executables-have-shebangs
+  - id: check-json
+  - id: check-symlinks
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.16.0
+  hooks:
+  - id: pretty-format-yaml
+    args:
+    - --autofix
+    - --indent
+    - '2'
+    - --preserve-quotes
+    - --line-width
+    - '180'
+- repo: https://github.com/google/go-jsonnet
+  rev: v0.22.0
+  hooks:
+  - id: jsonnet-format

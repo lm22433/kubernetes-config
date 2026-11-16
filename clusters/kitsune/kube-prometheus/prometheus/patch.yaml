@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: k8s
+  namespace: kube-prometheus
+spec:
+  externalUrl: "https://prometheus.localhost"
+  replicas: 1
+  resources:
+    requests:
+      cpu: 15m
+      memory: 250Mi
+    limits:
+      memory: 500Mi

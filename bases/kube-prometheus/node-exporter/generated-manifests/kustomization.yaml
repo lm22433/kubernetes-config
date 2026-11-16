@@ -1,0 +1,12 @@
+# Generated from Makefile
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- clusterRole.yaml
+- clusterRoleBinding.yaml
+- daemonset.yaml
+- networkPolicy.yaml
+- prometheusRule.yaml
+- service.yaml
+- serviceAccount.yaml
+- serviceMonitor.yaml

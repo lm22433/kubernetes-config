@@ -1,0 +1,57 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loki-servicemonitor
+  namespace: loki
+spec:
+  endpoints:
+  - path: /metrics
+    port: compactor-http-metrics
+    relabelings:
+    - action: replace
+      replacement: loki/$1
+      sourceLabels:
+      - job
+      targetLabel: job
+  - path: /metrics
+    port: distributor-http-metrics
+    relabelings:
+    - action: replace
+      replacement: loki/$1
+      sourceLabels:
+      - job
+      targetLabel: job
+  - path: /metrics
+    port: ingester-http-metrics
+    relabelings:
+    - action: replace
+      replacement: loki/$1
+      sourceLabels:
+      - job
+      targetLabel: job
+  - path: /metrics
+    port: querier-http-metrics
+    relabelings:
+    - action: replace
+      replacement: loki/$1
+      sourceLabels:
+      - job
+      targetLabel: job
+  - path: /metrics
+    port: http-metrics
+  - path: /metrics
+    port: http-metrics
+  namespaceSelector:
+    matchNames:
+    - loki
+  selector:
+    matchExpressions:
+    - key: name
+      operator: In
+      values:
+      - compactor
+      - distributor
+      - ingester
+      - querier
+      - query-frontend
+      - query-frontend

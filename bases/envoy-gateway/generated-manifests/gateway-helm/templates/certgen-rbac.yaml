@@ -1,0 +1,130 @@
+---
+# Source: gateway-helm/templates/certgen-rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+# Disable token automounting on the ServiceAccount by default to satisfy
+# Kubescape control C-0034. Pods that need Kubernetes API access explicitly
+# enable automountServiceAccountToken in their pod spec.
+automountServiceAccountToken: false
+metadata:
+  name: envoy-gateway-gateway-helm-certgen
+  namespace: envoy-gateway
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"   # Ensure rbac is created before the certgen job when using ArgoCD or Flux.
+
+---
+# Source: gateway-helm/templates/certgen-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: 'envoy-gateway-gateway-helm-certgen:envoy-gateway'
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"   # Ensure rbac is created before the certgen job when using ArgoCD or Flux.
+rules:
+  - apiGroups:
+    - admissionregistration.k8s.io
+    resources:
+    - mutatingwebhookconfigurations
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+    resourceNames:
+      - 'envoy-gateway-topology-injector.envoy-gateway'
+    verbs:
+      - update
+      - patch
+
+---
+# Source: gateway-helm/templates/certgen-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: 'envoy-gateway-gateway-helm-certgen:envoy-gateway'
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"   # Ensure rbac is created before the certgen job when using ArgoCD or Flux.
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'envoy-gateway-gateway-helm-certgen:envoy-gateway'
+subjects:
+  - kind: ServiceAccount
+    name: 'envoy-gateway-gateway-helm-certgen'
+    namespace: envoy-gateway
+
+---
+# Source: gateway-helm/templates/certgen-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: envoy-gateway-gateway-helm-certgen
+  namespace: envoy-gateway
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"   # Ensure rbac is created before the certgen job when using ArgoCD or Flux.
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - create
+  - update
+
+---
+# Source: gateway-helm/templates/certgen-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: envoy-gateway-gateway-helm-certgen
+  namespace: envoy-gateway
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-weight": "-1"   # Ensure rbac is created before the certgen job when using ArgoCD or Flux.
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'envoy-gateway-gateway-helm-certgen'
+subjects:
+- kind: ServiceAccount
+  name: 'envoy-gateway-gateway-helm-certgen'
+  namespace: envoy-gateway
+

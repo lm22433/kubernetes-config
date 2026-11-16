@@ -1,0 +1,66 @@
+---
+# HTTPS on the private Gateway for one app.
+# Namespace comes from the overlay's `namespace:`. Patch per app/cluster:
+#   ListenerSet  https  /spec/listeners/0/hostname
+#   HTTPRoute    https  /spec/hostnames/0, /spec/rules/0/backendRefs/0/name (and port if not 80)
+#   Certificate  tls    /spec/dnsNames/0, /spec/issuerRef/name
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: https
+spec:
+  parentRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    namespace: envoy-gateway
+    name: private
+  listeners:
+  - name: https
+    hostname: app.example.com
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - group: ''
+        kind: Secret
+        name: tls
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: https
+  labels:
+    gateway.networking.k8s.io/protocol: https
+spec:
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: ListenerSet
+    name: https
+    sectionName: https
+  hostnames:
+  - app.example.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - group: ''
+      kind: Service
+      name: app
+      port: 80
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tls
+spec:
+  secretName: tls
+  dnsNames:
+  - app.example.com
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-dns01-prod

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KUSTOMIZE_VERSION: 5.8.3
+  HELM_VERSION: v4.3.0
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+    - name: Setup Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.15"
+    - name: Cache Pre-commit Environments
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install Pre-commit
+      run: pip install pre-commit==4.7.0
+    - name: Run Pre-commit Hooks
+      run: pre-commit run --all-files --show-diff-on-failure
+  kustomize-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+    - name: Install Kustomize
+      run: |
+        curl -sSfL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+          | sudo tar -xz -C /usr/local/bin kustomize
+    - name: Build Kustomizations
+      run: bash scripts/kustomize-build.sh
+  generated-manifests:
+    name: check generated ${{ matrix.target }} manifests
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [alloy, argocd, cert-manager, envoy-gateway, external-secrets, headlamp, kube-prometheus, loki]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+    - name: Setup Helm
+      uses: azure/setup-helm@v5
+      with:
+        version: ${{ env.HELM_VERSION }}
+    - name: Install Kustomize
+      if: matrix.target == 'argocd'
+      run: |
+        curl -sSfL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" \
+          | sudo tar -xz -C /usr/local/bin kustomize
+    - name: Install Python yq
+      if: matrix.target == 'envoy-gateway'
+      run: pip install yq==4.4.5
+    - run: bash scripts/check-generated-manifests.sh --check ${{ matrix.target }}

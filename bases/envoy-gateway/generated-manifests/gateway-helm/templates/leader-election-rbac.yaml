@@ -1,0 +1,68 @@
+---
+# Source: gateway-helm/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: envoy-gateway-gateway-helm-leader-election-role
+  namespace: envoy-gateway
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+
+---
+# Source: gateway-helm/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: envoy-gateway-gateway-helm-leader-election-rolebinding
+  namespace: envoy-gateway
+  labels:
+    helm.sh/chart: gateway-helm-1.10.0
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/instance: envoy-gateway
+    app.kubernetes.io/version: "v1.10.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'envoy-gateway-gateway-helm-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'envoy-gateway'
+  namespace: envoy-gateway
+

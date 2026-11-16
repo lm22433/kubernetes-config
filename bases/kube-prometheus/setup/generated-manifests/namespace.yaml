@@ -1,0 +1,8 @@
+# Generated from Makefile
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/warn-version: latest
+  name: kube-prometheus

@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "consul"
+        }
+      },
+      "version": "dfd854fa671fba95fb6dc915e022715b6db043ce",
+      "sum": "Po3c1Ic96ngrJCtOazic/7OsLkoILOKZWXWyZWl+od8="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "jaeger-agent-mixin"
+        }
+      },
+      "version": "dfd854fa671fba95fb6dc915e022715b6db043ce",
+      "sum": "h/nMdmRK8Ep4bnRXKOuVL+RlUm85hhtD0LGIsf2THAY="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "ksonnet-util"
+        }
+      },
+      "version": "dfd854fa671fba95fb6dc915e022715b6db043ce",
+      "sum": "0y3AFX9LQSpfWTxWKSwoLgbt0Wc9nnCwhMH2szKzHv0="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "memcached"
+        }
+      },
+      "version": "dfd854fa671fba95fb6dc915e022715b6db043ce",
+      "sum": "zNTCDRaCqJUHjQSQRsxGR3jLrMP9tU7YNQb13dbm1bU="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/loki.git",
+          "subdir": "production/ksonnet/loki"
+        }
+      },
+      "version": "21c691ca044b4eb8f816a40b0d743a8d3a122fc2",
+      "sum": "l78QzdlGAMZ0slFXBkFenI8IfG+Q7KcA9mfzYZp/Rkg="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/jsonnet-libs/k8s-libsonnet.git",
+          "subdir": "1.37"
+        }
+      },
+      "version": "f66023fcddc92e89c3e81bd49c1f528a984505ef",
+      "sum": "pL5jLDOl+fG8CvpjjW3v+YDNRLQOYvCS5GC/ppy/6h8="
+    }
+  ],
+  "legacyImports": false
+}

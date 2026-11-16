@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: compactor
+  namespace: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: compactor
+  serviceName: compactor
+  template:
+    metadata:
+      annotations:
+        config_hash: 06fb1bb99c44ebc1a716758de3b985f4
+      labels:
+        loki_gossip_member: "true"
+        name: compactor
+    spec:
+      containers:
+      - args:
+        - -config.expand-env=true
+        - -config.file=/etc/loki/config/config.yaml
+        - -limits.per-user-override-config=/etc/loki/overrides/overrides.yaml
+        - -target=compactor
+        env:
+        - name: S3_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: access-key-id
+              name: loki-s3-credentials
+        - name: S3_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secret-access-key
+              name: loki-s3-credentials
+        image: grafana/loki:3.7.10
+        imagePullPolicy: IfNotPresent
+        name: compactor
+        ports:
+        - containerPort: 3100
+          name: http-metrics
+        - containerPort: 9095
+          name: grpc
+        - containerPort: 7946
+          name: gossip-ring
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3100
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /data
+          name: compactor-data
+        - mountPath: /etc/loki/config
+          name: loki
+        - mountPath: /etc/loki/overrides
+          name: overrides
+      securityContext:
+        fsGroup: 10001
+      volumes:
+      - configMap:
+          name: loki
+        name: loki
+      - configMap:
+          name: overrides
+        name: overrides
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: compactor-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi

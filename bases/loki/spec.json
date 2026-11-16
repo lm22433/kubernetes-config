@@ -1,0 +1,14 @@
+{
+    "apiVersion": "tanka.dev/v1alpha1",
+    "kind": "Environment",
+    "metadata": {
+        "name": "environment/bases"
+    },
+    "spec": {
+        "apiServer": "",
+        "contextNames": null,
+        "namespace": "loki",
+        "resourceDefaults": {},
+        "expectVersions": {}
+    }
+}

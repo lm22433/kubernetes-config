@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../bases/gateways/private
+- ../../../bases/gateways/public
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/listeners/0/hostname
+      value: '*.harrygreentree.dev'
+  target:
+    kind: Gateway
+    name: private|public
+- patch: |-
+    - op: replace
+      path: /spec/hostnames/0
+      value: '*.harrygreentree.dev'
+  target:
+    kind: HTTPRoute
+    name: http-filter-redirect

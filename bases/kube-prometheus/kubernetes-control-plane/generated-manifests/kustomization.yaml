@@ -1,0 +1,8 @@
+# Generated from Makefile
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- prometheusRule.yaml
+- serviceMonitorApiserver.yaml
+- serviceMonitorCoreDNS.yaml
+- serviceMonitorKubelet.yaml

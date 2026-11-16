@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- apps-v1.Deployment-distributor.yaml
+- apps-v1.Deployment-query-frontend.yaml
+- apps-v1.StatefulSet-compactor.yaml
+- apps-v1.StatefulSet-ingester.yaml
+- apps-v1.StatefulSet-memcached-frontend.yaml
+- apps-v1.StatefulSet-memcached-index-queries.yaml
+- apps-v1.StatefulSet-memcached.yaml
+- apps-v1.StatefulSet-querier.yaml
+- monitoring.coreos.com-v1.ServiceMonitor-loki-servicemonitor.yaml
+- policy-v1.PodDisruptionBudget-distributor-pdb.yaml
+- policy-v1.PodDisruptionBudget-loki-ingester-pdb.yaml
+- v1.ConfigMap-loki.yaml
+- v1.ConfigMap-overrides.yaml
+- v1.Namespace-loki.yaml
+- v1.Service-compactor.yaml
+- v1.Service-distributor.yaml
+- v1.Service-gossip-ring.yaml
+- v1.Service-ingester.yaml
+- v1.Service-memcached-frontend.yaml
+- v1.Service-memcached-index-queries.yaml
+- v1.Service-memcached.yaml
+- v1.Service-querier.yaml
+- v1.Service-query-frontend-headless.yaml
+- v1.Service-query-frontend.yaml

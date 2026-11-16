@@ -1,0 +1,79 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy-merged-public
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: envoy-merged-public
+    namespace: envoy-gateway
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public
+  namespace: envoy-gateway
+  labels:
+    gateway.networking.k8s.io/class: envoy-merged-public
+spec:
+  gatewayClassName: envoy-merged-public
+  allowedListeners:
+    namespaces:
+      from: All
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    hostname: '*.example.com'
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: deny-all
+  namespace: envoy-gateway
+spec:
+  targetRefs:
+  - kind: Gateway
+    name: public
+    group: gateway.networking.k8s.io
+  authorization:
+    defaultAction: Deny
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-merged-public
+  namespace: envoy-gateway
+spec:
+  mergeGateways: true
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        annotations: {}
+      envoyDeployment:
+        replicas: 3
+        strategy:
+          rollingUpdate:
+            maxSurge: 0
+            maxUnavailable: 1
+          type: RollingUpdate
+        pod:
+          tolerations: []
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: gateway.envoyproxy.io/owning-gatewayclass
+                    operator: In
+                    values:
+                    - envoy-merged-public
+                topologyKey: "kubernetes.io/hostname"
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "topology.kubernetes.io/zone"
+            whenUnsatisfiable: DoNotSchedule

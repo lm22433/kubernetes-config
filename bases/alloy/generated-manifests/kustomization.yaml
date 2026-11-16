@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: alloy
+
+resources:
+  - ./alloy/templates/configmap.yaml
+  - ./alloy/templates/controllers/daemonset.yaml
+  - ./alloy/templates/rbac.yaml
+  - ./alloy/templates/service.yaml
+  - ./alloy/templates/serviceaccount.yaml
+  - ./alloy/templates/servicemonitor.yaml

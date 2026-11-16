@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: kube-prometheus
+spec:
+  template:
+    spec:
+      containers:
+      - name: kube-state-metrics
+        resources:
+          $patch: delete
+      - name: kube-rbac-proxy-main
+        resources:
+          $patch: delete
+      - name: kube-rbac-proxy-self
+        resources:
+          $patch: delete

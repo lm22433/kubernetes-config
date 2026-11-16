@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: envoy-gateway
+
+resources:
+  - ./templates/certgen-rbac.yaml
+  - ./templates/certgen.yaml
+  - ./templates/envoy-gateway-config.yaml
+  - ./templates/envoy-gateway-deployment.yaml
+  - ./templates/envoy-gateway-rbac.yaml
+  - ./templates/envoy-gateway-service.yaml
+  - ./templates/envoy-gateway-serviceaccount.yaml
+  - ./templates/envoy-proxy-topology-injector-webhook.yaml
+  - ./templates/infra-manager-rbac.yaml
+  - ./templates/leader-election-rbac.yaml

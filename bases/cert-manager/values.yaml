@@ -1,0 +1,20 @@
+installCRDs: true
+prometheus:
+  servicemonitor:
+    enabled: true
+serviceAccount:
+  create: true
+  name: cert-manager
+securityContext:
+  runAsNonRoot: true
+  fsGroup: 65534
+extraArgs:
+- "--dns01-recursive-nameservers-only"
+- "--dns01-recursive-nameservers=8.8.8.8:53,8.8.4.4:53"
+config:
+  apiVersion: controller.config.cert-manager.io/v1alpha1
+  kind: ControllerConfiguration
+  enableGatewayAPI: true
+  enableGatewayAPIListenerSet: true
+  featureGates:
+    ListenerSets: true
