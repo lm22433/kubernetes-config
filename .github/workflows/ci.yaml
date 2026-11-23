@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [alloy, argocd, cert-manager, envoy-gateway, external-secrets, headlamp, kube-prometheus, loki]
+        target: [alloy, argocd, cert-manager, envoy-gateway, external-secrets, headlamp, kube-prometheus, loki, metallb]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository

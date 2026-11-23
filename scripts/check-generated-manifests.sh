@@ -4,7 +4,7 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
-ALL_TARGETS=(alloy argocd cert-manager envoy-gateway external-secrets headlamp kube-prometheus loki)
+ALL_TARGETS=(alloy argocd cert-manager envoy-gateway external-secrets headlamp kube-prometheus loki metallb)
 
 check=0
 if [[ ${1:-} == --check ]]; then check=1; shift; fi
@@ -13,7 +13,7 @@ targets=("${@:-${ALL_TARGETS[@]}}")
 generate() {
   case $1 in
     argocd)          make -C bases/argocd ;;
-    alloy|cert-manager|envoy-gateway|external-secrets|headlamp)
+    alloy|cert-manager|envoy-gateway|external-secrets|headlamp|metallb)
                      (cd "bases/$1" && bash template.sh) ;;
     kube-prometheus) make -C bases/kube-prometheus docker-build ;;
     loki)            make -C bases/loki docker-build ;;

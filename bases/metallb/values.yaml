@@ -1,0 +1,4 @@
+frrk8s:
+  enabled: false
+speaker:
+  ignoreExcludeLB: true
