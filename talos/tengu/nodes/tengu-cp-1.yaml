@@ -1,0 +1,17 @@
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: tengu-cp-1
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: eno1
+addresses:
+- address: 192.168.0.21/24
+routes:
+- gateway: 192.168.0.1
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 192.168.0.20
+link: eno1
