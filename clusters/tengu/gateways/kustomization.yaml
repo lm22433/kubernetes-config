@@ -20,3 +20,17 @@ patches:
   target:
     kind: HTTPRoute
     name: http-filter-redirect
+- patch: |-
+    - op: add
+      path: /spec/provider/kubernetes/envoyService/annotations/metallb.io~1loadBalancerIPs
+      value: 192.168.0.40
+  target:
+    kind: EnvoyProxy
+    name: envoy-merged-private
+- patch: |-
+    - op: add
+      path: /spec/provider/kubernetes/envoyService/annotations/metallb.io~1loadBalancerIPs
+      value: 192.168.0.41
+  target:
+    kind: EnvoyProxy
+    name: envoy-merged-public
